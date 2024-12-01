@@ -1,0 +1,32 @@
+﻿@using CarRental.Core.Entities
+@model List<Car>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<table class="table table-bordered table-hover mt-3">
+    <thead class="table-light">
+        <tr>
+            <th>Araç Adı</th>
+            <th>Plakası</th>
+            <th>Fiyatı</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Plate</td>
+                <td>@item.Price</td>
+                <td><a href="/Car/DeleteCar/@item.Id" class="btn btn-outline-danger">Sil</a></td>
+                <td><a href="/Car/EditCar/@item.Id" class="btn btn-outline-warning">Güncelle</a></td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<a href="/Car/AddCar" class="btn btn-outline-primary">Yeni Araç Kaydı</a>
