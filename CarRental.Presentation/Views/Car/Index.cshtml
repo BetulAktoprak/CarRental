@@ -11,7 +11,11 @@
         <tr>
             <th>Araç Adı</th>
             <th>Plakası</th>
-            <th>Fiyatı</th>
+            <th>Aktif Çalışma Süresi (sa)</th>
+            <th>Bakım Süresi (sa)</th>
+            <th>Boşta Bekleme Süresi (sa)</th>
+            <th>#</th>
+            <th>#</th>
         </tr>
     </thead>
     <tbody>
@@ -20,9 +24,22 @@
             <tr>
                 <td>@item.Name</td>
                 <td>@item.Plate</td>
-                <td>@item.Price</td>
+                @if (item.WorkTimes != null && item.WorkTimes.Any())
+                {
+                    @foreach (var wt in item.WorkTimes)
+                    {
+                        <td>@wt.ActiveWorkHours ?? 0</td>
+                        <td>@wt.MaintenanceHours ?? 0</td>
+                        <td>@wt.IdleTime ?? 0</td>
+                    }
+                }
+                else
+                {
+                    <td colspan="3">Veri yok</td>
+                }
+
                 <td><a href="/Car/DeleteCar/@item.Id" class="btn btn-outline-danger">Sil</a></td>
-                <td><a href="/Car/EditCar/@item.Id" class="btn btn-outline-warning">Güncelle</a></td>
+                <td><a href="/Car/EditCar/@item.Id" class="btn btn-outline-warning">Düzenle</a></td>
             </tr>
         }
 

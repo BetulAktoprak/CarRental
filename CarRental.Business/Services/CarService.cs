@@ -18,4 +18,9 @@ public class CarService : Service<Car>, ICarService
     {
         return await _carRepository.GetAdminReportAsync(startDate, endDate);
     }
+
+    public async Task<List<Car>> GetUserCarsAsync(string userName)
+    {
+        return await _carRepository.GetUserCarsAsync(userName);
+    }
 }

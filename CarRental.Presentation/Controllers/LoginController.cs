@@ -26,13 +26,13 @@ public class LoginController : Controller
     public async Task<IActionResult> Register(User user)
     {
         await _userService.RegisterAsync(user);
-        return View("Index", "Login");
+        return RedirectToAction("Index", "Login");
     }
 
     [HttpGet]
     public IActionResult Login()
     {
-        return RedirectToAction("Index", "Home");
+        return View();
     }
 
     [HttpPost]
@@ -48,7 +48,14 @@ public class LoginController : Controller
         HttpContext.Session.SetString("UserId", user.Id.ToString());
         HttpContext.Session.SetString("Role", user.Role);
 
-        return RedirectToAction("Index", "Home");
+        if (user.Role == Roles.Admin)
+        {
+            return RedirectToAction("Index", "Car");
+        }
+        else
+        {
+            return RedirectToAction("UserCar", "Home");
+        }
     }
 
     public IActionResult Logout()

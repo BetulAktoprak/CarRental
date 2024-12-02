@@ -1,4 +1,5 @@
 using CarRental.Business.Services;
+using CarRental.Core.Entities;
 using CarRental.Core.Repositories;
 using CarRental.Core.Services;
 using CarRental.Core.UnitOfWorks;
@@ -47,6 +48,29 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var userService = serviceProvider.GetRequiredService<IUserService>();
+
+    var existingAdmin = await userService.AuthenticateAsync("admin", "admin@gmail.com", "admin123");
+
+    if (existingAdmin == null)
+    {
+        var adminUser = new User
+        {
+            FullName = "Admin User",
+            UserName = "admin",
+            Email = "admin@gmail.com",
+            Password = "admin123",
+            Role = Roles.Admin,
+            CreatedDate = DateTime.UtcNow
+        };
+
+        await userService.RegisterAsync(adminUser);
+    }
+}
 
 app.UseAuthorization();
 

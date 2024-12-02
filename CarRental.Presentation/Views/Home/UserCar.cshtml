@@ -1,0 +1,67 @@
+﻿@model CarRental.Presentation.Models.UserViewModel
+@{
+    ViewData["Title"] = "UserCar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-section cta">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-9 mx-auto">
+                <div class="cta-inner bg-faded text-center rounded">
+                    <h2>Hoşgeldin, @Model.FullName!</h2>
+
+                    <h3>Kayıtlı Araçların</h3>
+                    @if (Model.Cars != null && Model.Cars.Any())
+                    {
+                        <table class="table table-bordered mt-3">
+                            <thead>
+                                <tr>
+                                    <th>Araç Adı</th>
+                                    <th>Plakası</th>
+                                    <th>Aktif Çalışma Süresi (sa)</th>
+                                    <th>Bakım Süresi (sa)</th>
+                                    <th>Kayıt Tarihi</th>
+                                    <th>Ücret</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var car in Model.Cars)
+                                {
+                                    <tr>
+                                        <td>@car.Name</td>
+                                        <td>@car.Plate</td>
+                                        @if (car.WorkTimes != null && car.WorkTimes.Any())
+                                        {
+
+                                            @foreach (var wt in car.WorkTimes)
+                                        {
+                                            <td>@wt.ActiveWorkHours</td>
+                                            <td>@wt.MaintenanceHours</td>
+                                            <td>@wt.RecordedDate</td>
+                                        }
+                                        }
+                                        else
+                                        {
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                        }
+                                        <td>@car.Price</td>
+                                        <td><a class="btn btn-outline-warning">Düzenle</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <a class="btn btn-outline-secondary" href="/Home/CreateUserCar">Yeni Bilgi Ekle</a>
+                    }
+                    else
+                    {
+                        <p>Henüz bir aracınız yok.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

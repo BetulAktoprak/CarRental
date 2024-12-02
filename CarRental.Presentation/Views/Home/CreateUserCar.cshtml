@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewData["Title"] = "CreateUserCar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-section cta">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-9 mx-auto">
+                <div class="cta-inner bg-faded text-center rounded">
+                    <h2>Çalışma Saati ve Bakım Bilgisi Ekle</h2>
+
+                    @if (ViewBag.Cars != null)
+                    {
+                        <form asp-action="CreateUserCar" asp-controller="Home" method="post">
+                            <div class="form-group">
+                                <label for="CarId">Araç Seç</label>
+                                <select class="form-control" id="CarId" name="CarId">
+                                    @foreach (var car in ViewBag.Cars)
+                                    {
+                                        <option value="@car.Value">@car.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ActiveWorkHours">Aktif Çalışma Saati</label>
+                                <input type="number" class="form-control" id="ActiveWorkHours" name="ActiveWorkHours" required min="0" />
+                            </div>
+                            <div class="form-group">
+                                <label for="MaintenanceHours">Bakım Saati</label>
+                                <input type="number" class="form-control" id="MaintenanceHours" name="MaintenanceHours" required min="0" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                        </form>
+
+                    }
+                    else
+                    {
+                        <p>Henüz bir araç kaydınız yok. Araç eklemek için <a href="#">buraya tıklayın</a>.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

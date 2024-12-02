@@ -16,5 +16,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasIndex(c => c.Email)
             .IsUnique();
+
     }
 }

@@ -8,5 +8,5 @@ public sealed class WorkTime : Entity
     public decimal ActiveWorkHours { get; set; }
     public decimal MaintenanceHours { get; set; }
     public decimal IdleTime { get; set; }
-    public DateTime RecordedDate { get; set; }
+    public DateTime RecordedDate { get; set; } = DateTime.UtcNow;
 }
