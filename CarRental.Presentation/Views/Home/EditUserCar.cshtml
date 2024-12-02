@@ -1,0 +1,41 @@
+﻿@model EditWorkTimeViewModel
+@{
+    ViewData["Title"] = "EditUserCar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-section cta">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-sm-10">
+                <div class="cta-inner bg-light text-center rounded shadow p-5">
+                    <h2>Çalışma Saati ve Bakım Bilgisi Düzenle</h2>
+
+                    <form asp-action="EditUserCar" asp-controller="Home" method="post">
+                        <input type="hidden" asp-for="Id" />
+
+                        @* <div class="form-group">
+                            <label for="CarId">Araç</label>
+                            <select asp-for="CarId" class="form-control" asp-items="@(new SelectList(ViewBag.Cars, "Id", "Name", Model.CarId))">
+                                <option value="">Araç seçin...</option>
+                            </select>
+                        </div> *@
+
+                        <div class="form-group">
+                            <label asp-for="ActiveWorkHours">Aktif Çalışma Saati</label>
+                            <input asp-for="ActiveWorkHours" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="MaintenanceHours">Bakım Süresi (sa)</label>
+                            <input asp-for="MaintenanceHours" class="form-control" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-5">Kaydet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -5,5 +5,5 @@ namespace CarRental.Core.Services;
 public interface ICarService : IService<Car>
 {
     Task<List<CarWorkTimeViewModel>> GetAdminReportAsync(DateTime startDate, DateTime endDate);
-    Task<List<Car>> GetUserCarsAsync(string userName);
+    Task<List<Car>> GetUserCarsAsync(Guid userId);
 }

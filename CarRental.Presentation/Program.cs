@@ -72,9 +72,9 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.UseAuthorization();
-
 app.UseSession();
+
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

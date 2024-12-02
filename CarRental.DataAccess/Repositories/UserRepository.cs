@@ -21,11 +21,11 @@ public class UserRepository : GenericRepository<User>, IUserRepository
                 u.Password == password);
     }
 
-    public async Task<List<Car>> GetUserCarsAsync(Guid userId)
+    public async Task<User> GetUserCarsAsync(Guid userId)
     {
-        return await _context.Cars
-            .Where(c => c.UserId == userId)
-            .ToListAsync();
+        return await _context.Users
+            .Include(c => c.Cars)
+            .FirstOrDefaultAsync(u => u.Id == userId);
     }
 
     public async Task<User> GetUserWithCarsAndWorkTimesAsync(Guid userId)

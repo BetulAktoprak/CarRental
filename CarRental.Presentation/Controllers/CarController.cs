@@ -24,6 +24,12 @@ public class CarController : Controller
         return View(cars);
     }
 
+    public async Task<IActionResult> ListCar()
+    {
+        var cars = await _carService.GetAllAsync();
+        return View(cars);
+    }
+
     [HttpGet]
     public async Task<IActionResult> AddCar()
     {
@@ -43,9 +49,7 @@ public class CarController : Controller
     {
         await _carService.AddAsync(car);
 
-
         return RedirectToAction("Index");
-
     }
 
     [HttpGet]

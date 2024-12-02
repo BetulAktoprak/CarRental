@@ -26,7 +26,7 @@ public class UserService : Service<User>, IUserService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task<List<Car>> GetUserCarsAsync(Guid userId)
+    public async Task<User> GetUserCarsAsync(Guid userId)
     {
         return await _userRepository.GetUserCarsAsync(userId);
     }

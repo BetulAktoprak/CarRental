@@ -1,0 +1,49 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "ListUserCar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="page-section cta">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-10 col-sm-12">
+                <div class="cta-inner bg-light text-center rounded shadow p-5">
+                    <h2 class="mb-4">Hoşgeldin, @Model.FullName!</h2>
+
+                    <h3>Kayıtlı Araçların</h3>
+                    @if (Model.Cars != null && Model.Cars.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover mt-3">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Araç Adı</th>
+                                        <th>Plaka</th>
+                                        <th>Ücret</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var car in Model.Cars)
+                                    {
+                                        <tr>
+                                            <td>@car.Name</td>
+                                            <td>@car.Plate</td>
+                                            <td>@car.Price.ToString("C")</td>
+                                        </tr>
+                                        
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Henüz bir aracınız yok.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

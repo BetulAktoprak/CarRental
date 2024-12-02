@@ -1,4 +1,4 @@
-﻿
+﻿@model CarRental.Core.Entities.WorkTime
 @{
     ViewData["Title"] = "CreateUserCar";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,44 +6,40 @@
 
 <section class="page-section cta">
     <div class="container">
-        <div class="row">
-            <div class="col-xl-9 mx-auto">
-                <div class="cta-inner bg-faded text-center rounded">
-                    <h2>Çalışma Saati ve Bakım Bilgisi Ekle</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="cta-inner bg-light text-center rounded shadow p-5">
+                    <h2 class="mb-4">Çalışma Saati ve Bakım Bilgisi Ekle</h2>
 
-                    @if (ViewBag.Cars != null)
-                    {
-                        <form asp-action="CreateUserCar" asp-controller="Home" method="post">
-                            <div class="form-group">
-                                <label for="CarId">Araç Seç</label>
-                                <select class="form-control" id="CarId" name="CarId">
-                                    @foreach (var car in ViewBag.Cars)
-                                    {
-                                        <option value="@car.Value">@car.Text</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="ActiveWorkHours">Aktif Çalışma Saati</label>
-                                <input type="number" class="form-control" id="ActiveWorkHours" name="ActiveWorkHours" required min="0" />
-                            </div>
-                            <div class="form-group">
-                                <label for="MaintenanceHours">Bakım Saati</label>
-                                <input type="number" class="form-control" id="MaintenanceHours" name="MaintenanceHours" required min="0" />
-                            </div>
-                            <button type="submit" class="btn btn-primary">Kaydet</button>
-                        </form>
+                    <form asp-action="CreateUserCar" asp-controller="Home" method="post">
+                        <div class="form-group mb-4">
+                            <label for="CarId" class="form-label font-weight-bold">Araç</label>
+                            <select asp-for="CarId" class="form-select" asp-items="@(new SelectList(ViewBag.Cars, "Id", "Name"))">
+                                <option value="">Araç seçin...</option>
+                            </select>
+                        </div>
 
-                    }
-                    else
-                    {
-                        <p>Henüz bir araç kaydınız yok. Araç eklemek için <a href="#">buraya tıklayın</a>.</p>
-                    }
+                        <div class="form-group mb-4">
+                            <label asp-for="ActiveWorkHours" class="form-label font-weight-bold">Aktif Çalışma Saati</label>
+                            <input asp-for="ActiveWorkHours" class="form-control" placeholder="Saat giriniz..." />
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="MaintenanceHours" class="form-label font-weight-bold">Bakım Süresi (sa)</label>
+                            <input asp-for="MaintenanceHours" class="form-control" placeholder="Saat giriniz..." />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block mt-4">
+                            <i class="fas fa-save"></i> Kaydet
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
 
 
 

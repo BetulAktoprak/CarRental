@@ -37,10 +37,10 @@ public class CarRepository : GenericRepository<Car>, ICarRepository
             .ToListAsync();
     }
 
-    public async Task<List<Car>> GetUserCarsAsync(string userName)
+    public async Task<List<Car>> GetUserCarsAsync(Guid userId)
     {
         return await _context.Cars
-        .Where(c => c.User.UserName == userName)
+        .Where(c => c.UserId == userId)
         .ToListAsync();
     }
 }

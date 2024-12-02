@@ -50,11 +50,11 @@ public class LoginController : Controller
 
         if (user.Role == Roles.Admin)
         {
-            return RedirectToAction("Index", "Car");
+            return RedirectToAction("ListCar", "Car");
         }
         else
         {
-            return RedirectToAction("UserCar", "Home");
+            return RedirectToAction("ListUserCar", "Home");
         }
     }
 

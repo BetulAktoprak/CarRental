@@ -2,7 +2,6 @@ using CarRental.Core.Entities;
 using CarRental.Core.Services;
 using CarRental.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 
 namespace CarRental.Presentation.Controllers;
@@ -23,6 +22,31 @@ public class HomeController : Controller
     {
         return View();
     }
+    [HttpGet]
+    public async Task<IActionResult> ListUserCar()
+    {
+        var userId = Guid.Parse(HttpContext.Session.GetString("UserId"));
+        var user = await _userService.GetUserCarsAsync(userId);
+
+        if (user is null)
+        {
+            return RedirectToAction("Login", "Login");
+        }
+
+        var model = new UserViewModel
+        {
+            FullName = user.FullName,
+            Cars = user.Cars.Select(car => new CarViewModel
+            {
+                Name = car.Name,
+                Plate = car.Plate,
+                Price = car.Price
+            }).ToList() ?? new List<CarViewModel>()
+        };
+
+        return View(model);
+    }
+
     [HttpGet]
     public async Task<IActionResult> UserCar()
     {
@@ -59,9 +83,16 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> CreateUserCar()
     {
-        var userName = User.Identity.Name;
+        var userIdString = HttpContext.Session.GetString("UserId");
 
-        var userCars = await _carService.GetUserCarsAsync(userName);
+        if (string.IsNullOrEmpty(userIdString))
+        {
+            return RedirectToAction("Login", "Login");
+        }
+
+        var userId = Guid.Parse(userIdString);
+
+        var userCars = await _carService.GetUserCarsAsync(userId);
 
         if (userCars == null || !userCars.Any())
         {
@@ -69,36 +100,63 @@ public class HomeController : Controller
             return RedirectToAction("UserCar");
         }
 
-        ViewBag.Cars = userCars.Select(u => new SelectListItem
-        {
-            Value = u.Id.ToString(),
-            Text = u.Plate
-        }).ToList();
+        ViewBag.Cars = userCars;
 
         return View();
     }
     [HttpPost]
-    public async Task<IActionResult> CreateUserCar(Guid CarId, decimal ActiveWorkHours, decimal MaintenanceHours)
+    public async Task<IActionResult> CreateUserCar(WorkTime workTime)
     {
-        var car = await _carService.GetByIdAsync(CarId);
-        if (car == null)
+        await _workTimeService.AddAsync(workTime);
+
+        var userIdString = HttpContext.Session.GetString("UserId");
+
+        if (!string.IsNullOrEmpty(userIdString))
         {
-            TempData["Error"] = "Seçilen araç bulunamadý.";
-            return RedirectToAction("UserCar");
+            var userId = Guid.Parse(userIdString);
+            ViewBag.Cars = _carService.GetUserCarsAsync(userId);
         }
-
-        var newWorkTime = new WorkTime
-        {
-            CarId = CarId,
-            ActiveWorkHours = ActiveWorkHours,
-            MaintenanceHours = MaintenanceHours,
-            RecordedDate = DateTime.Now
-        };
-
-        await _workTimeService.AddAsync(newWorkTime);
 
         TempData["Message"] = "Çalýþma saati ve bakým bilgisi baþarýyla eklendi.";
         return RedirectToAction("UserCar");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditUserCar(Guid id)
+    {
+        var workTime = await _workTimeService.GetByIdAsync(id);
+        if (workTime is null)
+        {
+            return NotFound();
+        }
+
+        var model = new EditWorkTimeViewModel
+        {
+            Id = workTime.Id,
+            CarId = workTime.CarId,
+            ActiveWorkHours = workTime.ActiveWorkHours,
+            MaintenanceHours = workTime.MaintenanceHours
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditUserCar(EditWorkTimeViewModel model)
+    {
+        var workTime = await _workTimeService.GetByIdAsync(model.Id);
+        if (workTime is null)
+        {
+            return NotFound();
+        }
+
+        workTime.ActiveWorkHours = model.ActiveWorkHours;
+        workTime.MaintenanceHours = model.MaintenanceHours;
+        workTime.RecordedDate = DateTime.UtcNow;
+
+        await _workTimeService.Update(workTime);
+
+        return RedirectToAction("UserCar", "Home");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

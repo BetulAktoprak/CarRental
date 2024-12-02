@@ -25,7 +25,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var entity = await _dbSet.FindAsync(id);
         if (entity == null)
         {
-            throw new KeyNotFoundException($"ID {id} ile eşleşen bir kayıt bulunamadı.");
+            throw new Exception("Kullanıcı bulunamadı.");
         }
         _dbSet.Remove(entity);
         await _context.SaveChangesAsync();

@@ -5,5 +5,5 @@ namespace CarRental.Core.Repositories;
 public interface ICarRepository : IGenericRepository<Car>
 {
     Task<List<CarWorkTimeViewModel>> GetAdminReportAsync(DateTime startDate, DateTime endDate);
-    Task<List<Car>> GetUserCarsAsync(string userName);
+    Task<List<Car>> GetUserCarsAsync(Guid userId);
 }
