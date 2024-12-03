@@ -14,15 +14,6 @@ public class CarController : Controller
         _carService = carService;
         _userService = userService;
     }
-    public async Task<IActionResult> Index()
-    {
-        var cars = await _carService.GetAllAsync();
-        foreach (var item in cars)
-        {
-            item.WorkTimes ??= new List<WorkTime>();
-        }
-        return View(cars);
-    }
 
     public async Task<IActionResult> ListCar()
     {
@@ -49,7 +40,7 @@ public class CarController : Controller
     {
         await _carService.AddAsync(car);
 
-        return RedirectToAction("Index");
+        return RedirectToAction("ListCar");
     }
 
     [HttpGet]
@@ -72,7 +63,7 @@ public class CarController : Controller
     {
 
         _carService.Update(car);
-        return RedirectToAction("Index");
+        return RedirectToAction("ListCar");
 
     }
 
@@ -83,6 +74,6 @@ public class CarController : Controller
         {
             return NotFound("Silinecek kayıt bulunamadı.");
         }
-        return RedirectToAction("Index");
+        return RedirectToAction("ListCar");
     }
 }

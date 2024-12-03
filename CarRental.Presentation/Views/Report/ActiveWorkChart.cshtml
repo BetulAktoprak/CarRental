@@ -1,0 +1,168 @@
+﻿@model List<WeeklyWorkTimeViewModel>
+@{
+    ViewData["Title"] = "ActiveWorkChart";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    var chartData = ViewBag.ChartData;
+}
+
+<div id="activeWorkChart" style="width: 900px; height: 500px;"></div>
+
+<script>
+    // Google Charts'ı yükle
+    google.charts.load('current', { packages: ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        // Backend'den gelen veriyi işliyoruz
+        const data = google.visualization.arrayToDataTable([
+            ['Araç Adı', 'Aktif Çalışma Süresi (%)'], // Başlıklar
+    @foreach (var item in chartData)
+    {
+        @: ['@item.Name', @item.ActiveWorkPercentage],
+    }
+        ]);
+
+        // Grafik opsiyonları
+        const options = {
+            title: 'Araçların Haftalık Aktif Çalışma Süresi (%)',
+            hAxis: { title: 'Araç Adı' },
+            vAxis: { title: 'Aktif Çalışma Yüzdesi (%)' },
+            legend: 'none'
+        };
+
+        // Grafiği oluştur
+        const chart = new google.visualization.ColumnChart(document.getElementById('activeWorkChart'));
+        chart.draw(data, options);
+    }
+</script>
+
+
+@* <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Result Visualization</title>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                url: '@Url.Action("ActiveWorkChart", "Report")',
+                success: function (result) {
+                    google.charts.load('current', {
+                        'packages': ['corechart']
+                    });
+                    google.charts.setOnLoadCallback(function () {
+                        drawChart(result);
+                    });
+                }
+            });
+        });
+
+        function drawChart(result) {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'name');
+            data.addColumn('number', 'ActiveWorkHours');
+            var dataArray = [];
+
+            $.each(result, function (i, obj) {
+                dataArray.push([obj.name, obj.activeworkhours]);
+            });
+            data.addRows(dataArray);
+
+            var columnChartOptions = {
+                title: "Ürün - Stok Grafiği",
+                width: 1000,
+                height: 400,
+                bar: { groupWidth: "20%" },
+            };
+
+            var columnChart = new google.visualization.PieChart(document
+                .getElementById('Piechart_div'));
+
+            columnChart.draw(data, columnChartOptions);
+        }
+    </script>
+</head>
+<body>
+    <div id="Piechart_div"></div>
+</body>
+</html> *@
+
+
+@* <h2>Weekly Active Work Percentage</h2>
+<!-- Grafik için canvas -->
+<canvas id="activeWorkChart" width="400" height="200"></canvas>
+
+<script>
+    // Backend'den verileri al
+    fetch('/Report/ActiveWorkChart') // 'ControllerName' yerine doğru controller adını yazın
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Veriler yüklenirken hata oluştu");
+            }
+            return response.json();
+        })
+        .then(data => {
+            // JSON verileri
+            console.log("Alınan veri:", data);
+
+            // Etiketler ve yüzdelik değerler
+            const labels = data.map(item => item.name); // Araç isimleri
+            const percentages = data.map(item => item.activeWorkPercentage.toFixed(2)); // Yüzde değerler
+
+            // Chart.js kullanarak grafiği oluştur
+            const ctx = document.getElementById('activeWorkChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar', // Sütun grafiği
+                data: {
+                    labels: labels, // Araç isimleri X ekseni
+                    datasets: [
+                        {
+                            label: 'Active Work Percentage (%)',
+                            data: percentages, // Aktif çalışma yüzdeleri
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)', // Sütun rengi
+                            borderColor: 'rgba(75, 192, 192, 1)', // Kenarlık rengi
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Car Names' // X ekseni başlığı
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: 100, // Maksimum değer %100
+                            title: {
+                                display: true,
+                                text: 'Percentage (%)' // Y ekseni başlığı
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Hata oluştu:', error);
+            alert('Grafik verisi yüklenirken bir hata oluştu.');
+        });
+</script> *@
+

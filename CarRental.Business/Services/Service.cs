@@ -39,6 +39,7 @@ public class Service<T> : IService<T> where T : class
         return await _repository.GetAllAsync();
     }
 
+
     public async Task<T> GetByIdAsync(Guid id)
     {
         return await _repository.GetByIdAsync(id);

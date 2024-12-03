@@ -1,51 +1,32 @@
-﻿@using CarRental.Core.ViewModels
-@model List<CarWorkTimeViewModel>
+﻿@model List<WeeklyWorkTimeViewModel>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
+<h3 class="m-3">Haftalık Araç Çalışma Süreleri</h3>
 
-<canvas id="carWorkChart" width="800" height="400"></canvas>
-<style>
-    #carWorkChart {
-        max-width: 90%; 
-        height: auto; 
-    }
-</style>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    var ctx = document.getElementById('carWorkChart').getContext('2d');
-    var chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: @Html.Raw(Json.Serialize(Model.Select(c => c.Plate))),
-            datasets: [
-                {
-                    label: 'Aktif Çalışma Süresi',
-                    data: @Html.Raw(Json.Serialize(Model.Select(c => c.ActiveWorkHours))),
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                },
-                {
-                    label: 'Bakım Süresi',
-                    data: @Html.Raw(Json.Serialize(Model.Select(c => c.MaintenanceHours))),
-                    backgroundColor: 'rgba(255, 159, 64, 0.6)',
-                },
-                {
-                    label: 'Boşta Bekleme Süresi',
-                    data: @Html.Raw(Json.Serialize(Model.Select(c => c.IdleTime))),
-                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+<table class="table table-bordered table-hover mt-3">
+    <thead class="table-light">
+        <tr>
+            <th>Araç Adı</th>
+            <th>Plakası</th>
+            <th>Aktif Çalışma Süresi (sa)</th>
+            <th>Bakım Süresi (sa)</th>
+            <th>Boşta Bekleme Süresi (sa)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Plate</td>
+                <td>@item.ActiveWorkHours</td>
+                <td>@item.MaintenanceHours</td>
+                <td>@item.IdleTime</td>
+            </tr>
         }
-    });
-</script>
+
+    </tbody>
+</table>

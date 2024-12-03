@@ -36,6 +36,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
     }
 
+
     public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbSet.FindAsync(id, cancellationToken);

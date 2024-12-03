@@ -2,6 +2,7 @@
 using CarRental.Core.Repositories;
 using CarRental.Core.Services;
 using CarRental.Core.UnitOfWorks;
+using System.Linq.Expressions;
 
 namespace CarRental.Business.Services;
 public class WorkTimeService : Service<WorkTime>, IWorkTimeService
@@ -13,4 +14,8 @@ public class WorkTimeService : Service<WorkTime>, IWorkTimeService
         _workTimeRepository = workTimeRepository;
     }
 
+    public async Task<List<WorkTime>> GetAllWithFilterAsync(Expression<Func<WorkTime, bool>> filter)
+    {
+        return await _workTimeRepository.GetAllWithFilterAsync(filter);
+    }
 }
