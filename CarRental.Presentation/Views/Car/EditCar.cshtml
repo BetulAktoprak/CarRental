@@ -14,33 +14,27 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         background-color: #f9f9f8;
     }
-
-    .form-label-custom {
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-
 </style>
 
 
 <form asp-asp-controller="Car" asp-action="EditCar" class="form-container mt-5" method="post">
     <h3 style="text-align:center;">Araç Güncelleme</h3>
-    <div class="mb-3">
-        @Html.Label("UserId", "Kullanıcı Seçimi", new { @class = "form-label-custom" })
-        @Html.DropDownListFor(
-                 x => x.UserId,
-                 (IEnumerable<SelectListItem>)ViewBag.Users,
-                 "Kullanıcı Seçin",
-                 new { @class = "form-select form-select-lg mt-2" }
-                 )
+    <div class="form-group mb-3">
+        <label for="UserId" class="form-label font-weight-bold">Kullanıcı Seçimi</label>
+        <select asp-for="UserId" class="form-select" asp-items="ViewBag.Users">
+            <option value="">Kullanıcı seçin...</option>
+        </select>
     </div>
-    <div class="mb-3">
-        @Html.Label("Name", "Araç Adı", new { @class = "form-label-custom" })
-        @Html.TextBoxFor(x => x.Name, new { @class = "form-control form-control-lg mt-2" })
+
+    <div class="form-group mb-4">
+        <label asp-for="Name" class="form-label font-weight-bold">Araç Adı</label>
+        <input asp-for="Name" class="form-control" placeholder="Araç adını giriniz..." />
     </div>
-    <div class="mb-3">
-        @Html.Label("Plate", "Plaka", new { @class = "form-label-custom" })
-        @Html.TextBoxFor(x => x.Plate, new { @class = "form-control form-control-lg mt-2" })
+
+    <div class="form-group mb-4">
+        <label asp-for="Plate" class="form-label font-weight-bold">Plaka</label>
+        <input asp-for="Plate" class="form-control" placeholder="Plakayı giriniz..." />
     </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
     <button class="btn btn-outline-warning">Güncelle</button>
 </form>

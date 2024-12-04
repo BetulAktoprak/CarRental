@@ -17,9 +17,9 @@ public class UserService : Service<User>, IUserService
         _validator = validator;
     }
 
-    public async Task<User> AuthenticateAsync(string username, string email, string password)
+    public async Task<User> AuthenticateAsync(string email, string password)
     {
-        return await _userRepository.AuthenticateAsync(username, email, password);
+        return await _userRepository.AuthenticateAsync(email, password);
     }
 
     public async Task RegisterAsync(User user)

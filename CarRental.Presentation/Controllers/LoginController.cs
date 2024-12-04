@@ -1,4 +1,5 @@
-﻿using CarRental.Core.Entities;
+﻿using CarRental.Business.Validations;
+using CarRental.Core.Entities;
 using CarRental.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ public class LoginController : Controller
     {
         return View();
     }
+
     [HttpGet]
     public IActionResult Register()
     {
@@ -25,6 +27,18 @@ public class LoginController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(User user)
     {
+        var validator = new UserValidator();
+        var validationResult = validator.Validate(user);
+
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+            }
+            return View(user);
+        }
+
         await _userService.RegisterAsync(user);
         return RedirectToAction("Index", "Login");
     }
@@ -36,9 +50,21 @@ public class LoginController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(string username, string email, string password)
+    public async Task<IActionResult> Login(string email, string password)
     {
-        var user = await _userService.AuthenticateAsync(username, email, password);
+        var validator = new LoginValidator();
+        var validationResult = validator.Validate((email, password));
+
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+            }
+            return View();
+        }
+
+        var user = await _userService.AuthenticateAsync(email, password);
         if (user == null)
         {
             ViewBag.ErrorMessage = "Geçersiz kullanıcı adı veya şifre!";

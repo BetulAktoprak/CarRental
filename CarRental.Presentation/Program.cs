@@ -61,7 +61,7 @@ using (var scope = app.Services.CreateScope())
     var serviceProvider = scope.ServiceProvider;
     var userService = serviceProvider.GetRequiredService<IUserService>();
 
-    var existingAdmin = await userService.AuthenticateAsync("admin", "admin@gmail.com", "admin123");
+    var existingAdmin = await userService.AuthenticateAsync("admin@gmail.com", "admin123");
 
     if (existingAdmin == null)
     {

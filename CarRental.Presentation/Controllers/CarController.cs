@@ -40,9 +40,9 @@ public class CarController : Controller
 
         if (!validationResult.IsValid)
         {
-            foreach (var failure in validationResult.Errors)
+            foreach (var error in validationResult.Errors)
             {
-                ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                ModelState.AddModelError(string.Empty, error.ErrorMessage);
             }
 
             var users = await _userService.GetAllAsync();
@@ -63,23 +63,35 @@ public class CarController : Controller
         if (car == null) return NotFound();
         var users = await _userService.GetAllAsync();
 
-        ViewBag.Users = users.Select(u => new SelectListItem
-        {
-            Value = u.Id.ToString(),
-            Text = u.FullName
-        }).ToList();
+        ViewBag.Users = new SelectList(users, "Id", "FullName");
+
         return View("EditCar", car);
     }
 
     [HttpPost]
-    public IActionResult EditCar(Car car)
+    public async Task<IActionResult> EditCar(Car car)
     {
+        var validator = new CarValidator();
+        var validationResult = await validator.ValidateAsync(car);
 
-        _carService.Update(car);
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+            }
+
+            var users = await _userService.GetAllAsync();
+            ViewBag.Users = new SelectList(users, "Id", "FullName");
+
+            return View(car);
+        }
+
+        await _carService.Update(car);
         return RedirectToAction("ListCar");
 
     }
-
+    [HttpGet]
     public async Task<IActionResult> DeleteCar(Guid id)
     {
         var result = await _carService.DeleteByIdAsync(id);

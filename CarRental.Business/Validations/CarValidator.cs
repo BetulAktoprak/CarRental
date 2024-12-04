@@ -7,7 +7,7 @@ public class CarValidator : AbstractValidator<Car>
     public CarValidator()
     {
         RuleFor(car => car.Name)
-            .NotEmpty().WithMessage("Araba ismi boş olamaz.")
+            .NotEmpty()
             .WithMessage("Araba ismi baş geçilemez.");
 
         RuleFor(car => car.Plate)
