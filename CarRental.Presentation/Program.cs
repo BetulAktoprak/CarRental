@@ -1,4 +1,5 @@
 using CarRental.Business.Services;
+using CarRental.Business.Validations;
 using CarRental.Core.Entities;
 using CarRental.Core.Repositories;
 using CarRental.Core.Services;
@@ -6,6 +7,7 @@ using CarRental.Core.UnitOfWorks;
 using CarRental.DataAccess.Context;
 using CarRental.DataAccess.Repositories;
 using CarRental.DataAccess.UnitOfWorks;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+builder.Services.AddScoped<IValidator<Car>, CarValidator>();
+builder.Services.AddScoped<IValidator<User>, UserValidator>();
+builder.Services.AddScoped<IValidator<WorkTime>, WorkTimeValidator>();
+
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IWorkTimeRepository, WorkTimeRepository>();

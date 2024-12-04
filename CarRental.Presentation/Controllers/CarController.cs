@@ -1,4 +1,5 @@
-﻿using CarRental.Core.Entities;
+﻿using CarRental.Business.Validations;
+using CarRental.Core.Entities;
 using CarRental.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,11 +27,7 @@ public class CarController : Controller
     {
         var users = await _userService.GetAllAsync();
 
-        ViewBag.Users = users.Select(u => new SelectListItem
-        {
-            Value = u.Id.ToString(),
-            Text = u.FullName
-        }).ToList();
+        ViewBag.Users = new SelectList(users, "Id", "FullName");
 
         return View(new Car());
     }
@@ -38,6 +35,22 @@ public class CarController : Controller
     [HttpPost]
     public async Task<IActionResult> AddCar(Car car)
     {
+        var validator = new CarValidator();
+        var validationResult = await validator.ValidateAsync(car);
+
+        if (!validationResult.IsValid)
+        {
+            foreach (var failure in validationResult.Errors)
+            {
+                ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+            }
+
+            var users = await _userService.GetAllAsync();
+            ViewBag.Users = new SelectList(users, "Id", "FullName");
+
+            return View(car);
+        }
+
         await _carService.AddAsync(car);
 
         return RedirectToAction("ListCar");

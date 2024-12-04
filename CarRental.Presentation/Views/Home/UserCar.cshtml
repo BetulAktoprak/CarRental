@@ -30,34 +30,17 @@
                                 <tbody>
                                     @foreach (var car in Model.Cars)
                                     {
-                                        if (car.WorkTimes != null && car.WorkTimes.Any())
-                                        {
-                                            foreach (var wt in car.WorkTimes)
-                                            {
-                                                <tr>
-                                                    <td>@car.Name</td>
-                                                    <td>@car.Plate</td>
-                                                    <td>@wt.ActiveWorkHours</td>
-                                                    <td>@wt.MaintenanceHours</td>
-                                                    <td>@wt.RecordedDate.ToString("dd.MM.yyyy")</td>
-                                                    <td>@car.Price.ToString("C")</td>
-                                                    <td>
-                                                        <a href="/Home/EditUserCar/@wt.Id" class="btn btn-outline-warning">Düzenle</a>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
-                                        else
+                                        foreach (var wt in car.WorkTimes)
                                         {
                                             <tr>
                                                 <td>@car.Name</td>
                                                 <td>@car.Plate</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>-</td>
+                                                <td>@wt.ActiveWorkHours</td>
+                                                <td>@wt.MaintenanceHours</td>
+                                                <td>@wt.RecordedDate.ToString("dd.MM.yyyy")</td>
                                                 <td>@car.Price.ToString("C")</td>
                                                 <td>
-                                                    <a href="/Home/EditUserCar" class="btn btn-outline-warning">Düzenle</a>
+                                                    <a href="/Home/EditUserCar/@wt.Id" class="btn btn-outline-warning">Düzenle</a>
                                                 </td>
                                             </tr>
                                         }

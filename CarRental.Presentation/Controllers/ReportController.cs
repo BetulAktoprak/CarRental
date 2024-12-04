@@ -25,13 +25,18 @@ public class ReportController : Controller
             .Select(g =>
             {
                 var firstWorkTime = g.FirstOrDefault();
+                var totalWorkHours = g.Sum(wt => wt.ActiveWorkHours + wt.MaintenanceHours);
+                var activeWorkHours = g.Sum(wt => wt.ActiveWorkHours);
+
                 return new WeeklyWorkTimeViewModel
                 {
                     Name = firstWorkTime?.Car?.Name ?? "Bilinmiyor",
                     Plate = firstWorkTime?.Car?.Plate ?? "Bilinmiyor",
-                    ActiveWorkHours = g.Sum(wt => wt.ActiveWorkHours),
+                    ActiveWorkHours = activeWorkHours,
                     MaintenanceHours = g.Sum(wt => wt.MaintenanceHours),
-                    IdleTime = (7 * 24) - g.Sum(wt => wt.ActiveWorkHours + wt.MaintenanceHours)
+                    IdleTime = 168 - totalWorkHours,
+                    IdleTimePercentage = ((168 - totalWorkHours) / 168) * 100,
+                    ActiveWorkPercentage = (activeWorkHours / 168) * 100
                 };
             })
             .ToList();
@@ -44,35 +49,18 @@ public class ReportController : Controller
 
         return View(weeklyWorkTimes);
     }
+
+    [HttpGet]
     public async Task<IActionResult> ActiveWorkChart()
     {
-        var lastWeek = DateTime.Now.AddDays(-7);
+        var data = await GetWeeklyWorkTimeAsync();
+        return View(data);
+    }
 
-        // Servis üzerinden veriyi alıyoruz
-        var workTimes = await _workTimeService.GetAllWithFilterAsync(wt => wt.RecordedDate >= lastWeek);
-
-        // Araç verilerini grup haline getiriyoruz
-        var groupedData = workTimes
-            .Where(wt => wt.Car != null)
-            .GroupBy(wt => wt.CarId)
-            .Select(g =>
-            {
-                var totalHours = g.Sum(wt => wt.ActiveWorkHours);
-                var totalWeeklyHours = 7 * 24; // Bir haftadaki toplam saat
-                var percentage = (totalHours / totalWeeklyHours) * 100; // Yüzdelik değer
-
-                return new
-                {
-                    Name = g.FirstOrDefault()?.Car?.Name ?? "Bilinmiyor",
-                    ActiveWorkPercentage = percentage
-                };
-            })
-            .ToList();
-
-        // ViewBag ile veriyi View'e taşıyoruz
-        ViewBag.ChartData = groupedData;
-
-        // View'e dönüyoruz
-        return View();
+    [HttpGet]
+    public async Task<IActionResult> IdleTimeChart()
+    {
+        var data = await GetWeeklyWorkTimeAsync();
+        return View(data);
     }
 }

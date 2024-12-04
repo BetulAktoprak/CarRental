@@ -1,20 +1,19 @@
 ﻿@model List<WeeklyWorkTimeViewModel>
 @{
-    ViewData["Title"] = "ActiveWorkChart";
+    ViewData["Title"] = "IdleTimeChart";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Grafik Test</title>
+    <title>Pie Chart</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.0.1/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .chart-container {
             position: relative;
             width: 100%; 
-            max-width: 900px; 
             height: 600px;
             margin: 0 auto; 
         }
@@ -27,8 +26,8 @@
 
     <div class="container my-5">
         <div class="card mb-4">
-            <div class="card-header bg-dark text-white">
-                Aktif Çalışma Saatleri (Yüzde)
+            <div class="card-header bg-danger text-white">
+                Araç Boşta Kalma Süreleri (Yüzde)
             </div>
             <div class="card-body">
                 <table class="table table-striped">
@@ -37,29 +36,31 @@
                             <th>#</th>
                             <th>Araç Adı</th>
                             <th>Plaka</th>
-                            <th>Aktif Çalışma Yüzdesi</th>
+                            <th>Boşta Kalma Yüzdesi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (int i = 0; i < Model.Count; i++)
                         {
+                            var idlePercentage = 100 - Model[i].ActiveWorkPercentage; 
                             <tr>
                                 <td>@(i + 1)</td>
                                 <td>@Model[i].Name</td>
                                 <td>@Model[i].Plate</td>
-                                <td>@Model[i].ActiveWorkPercentage.ToString("F2") %</td>
+                                <td>@idlePercentage.ToString("F2") %</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </div>
+
         <div class="card">
             <div class="card-header bg-success text-white">
-                Aktif Çalışma Süresi Grafiği
+                Araç Boşta Kalma Süresi Grafiği
             </div>
             <div class="chart-container">
-                <canvas id="weeklyWorkTimeChart"></canvas>
+                <canvas id="idleTimePieChart"></canvas>
             </div>
         </div>
     </div>
@@ -67,25 +68,36 @@
         const chartData = {
             labels: @Html.Raw(Json.Serialize(Model.Select(x => x.Plate).ToList())),
             datasets: [{
-                label: "Aktif Çalışma Yüzdesi",
-                data: @Html.Raw(Json.Serialize(Model.Select(x => x.ActiveWorkPercentage).ToList())),
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
-                borderColor: "rgba(75, 192, 192, 1)",
+                label: "Boşta Kalma Yüzdesi",
+                data: @Html.Raw(Json.Serialize(Model.Select(x => x.IdleTimePercentage).ToList())),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
                 borderWidth: 1
             }]
         };
 
-        const ctx = document.getElementById('weeklyWorkTimeChart').getContext('2d');
+        const ctx = document.getElementById('idleTimePieChart').getContext('2d');
         new Chart(ctx, {
-            type: 'bar',
+            type: 'pie',
             data: chartData,
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
+                plugins: {
+                    legend: {
+                        position: 'top',
                     }
                 }
             }
@@ -93,6 +105,4 @@
     </script>
 </body>
 </html>
-
-
 

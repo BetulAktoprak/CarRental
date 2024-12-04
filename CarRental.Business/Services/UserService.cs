@@ -2,16 +2,19 @@
 using CarRental.Core.Repositories;
 using CarRental.Core.Services;
 using CarRental.Core.UnitOfWorks;
+using FluentValidation;
 
 namespace CarRental.Business.Services;
 public class UserService : Service<User>, IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
-    public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork) : base(userRepository, unitOfWork)
+    private readonly IValidator<User> _validator;
+    public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IValidator<User> validator) : base(userRepository, unitOfWork, validator)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _validator = validator;
     }
 
     public async Task<User> AuthenticateAsync(string username, string email, string password)
