@@ -7,25 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Web\401.html" />
-    <None Include="wwwroot\Web\404.html" />
-    <None Include="wwwroot\Web\500.html" />
     <None Include="wwwroot\Web\assets\demo\chart-area-demo.js" />
     <None Include="wwwroot\Web\assets\demo\chart-bar-demo.js" />
     <None Include="wwwroot\Web\assets\demo\chart-pie-demo.js" />
     <None Include="wwwroot\Web\assets\demo\datatables-demo.js" />
     <None Include="wwwroot\Web\assets\img\error-404-monochrome.svg" />
-    <None Include="wwwroot\Web\charts.html" />
     <None Include="wwwroot\Web\css\styles.css" />
     <None Include="wwwroot\Web\index.html" />
     <None Include="wwwroot\Web\js\datatables-simple-demo.js" />
     <None Include="wwwroot\Web\js\scripts.js" />
-    <None Include="wwwroot\Web\layout-sidenav-light.html" />
-    <None Include="wwwroot\Web\layout-static.html" />
-    <None Include="wwwroot\Web\login.html" />
-    <None Include="wwwroot\Web\password.html" />
-    <None Include="wwwroot\Web\register.html" />
-    <None Include="wwwroot\Web\tables.html" />
   </ItemGroup>
 
   <ItemGroup>

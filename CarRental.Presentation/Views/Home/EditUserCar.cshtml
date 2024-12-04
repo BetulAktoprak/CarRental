@@ -14,13 +14,6 @@
                     <form asp-action="EditUserCar" asp-controller="Home" method="post">
                         <input type="hidden" asp-for="Id" />
 
-                        @* <div class="form-group">
-                            <label for="CarId">Araç</label>
-                            <select asp-for="CarId" class="form-control" asp-items="@(new SelectList(ViewBag.Cars, "Id", "Name", Model.CarId))">
-                                <option value="">Araç seçin...</option>
-                            </select>
-                        </div> *@
-
                         <div class="form-group">
                             <label asp-for="ActiveWorkHours">Aktif Çalışma Saati</label>
                             <input asp-for="ActiveWorkHours" class="form-control" />

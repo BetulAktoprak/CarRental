@@ -2,7 +2,6 @@
 using CarRental.Core.Repositories;
 using CarRental.Core.Services;
 using CarRental.Core.UnitOfWorks;
-using CarRental.Core.ViewModels;
 using FluentValidation;
 
 namespace CarRental.Business.Services;
@@ -15,11 +14,6 @@ public class CarService : Service<Car>, ICarService
     {
         _carRepository = carRepository;
         _validator = validator;
-    }
-
-    public async Task<List<CarWorkTimeViewModel>> GetAdminReportAsync(DateTime startDate, DateTime endDate)
-    {
-        return await _carRepository.GetAdminReportAsync(startDate, endDate);
     }
 
     public async Task<List<Car>> GetUserCarsAsync(Guid userId)
