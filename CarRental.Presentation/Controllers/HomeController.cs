@@ -1,3 +1,4 @@
+using CarRental.Business.Validations;
 using CarRental.Core.Entities;
 using CarRental.Core.Services;
 using CarRental.Presentation.Models;
@@ -107,6 +108,18 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> CreateUserCar(WorkTime workTime)
     {
+        var validator = new WorkTimeValidator();
+        var validationResult = await validator.ValidateAsync(workTime);
+
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+            }
+
+            return View(workTime);
+        }
         await _workTimeService.AddAsync(workTime);
 
         var userIdString = HttpContext.Session.GetString("UserId");
@@ -144,12 +157,24 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> EditUserCar(EditWorkTimeViewModel model)
     {
+
         var workTime = await _workTimeService.GetByIdAsync(model.Id);
         if (workTime is null)
         {
             return NotFound();
         }
+        var validator = new WorkTimeValidator();
+        var validationResult = await validator.ValidateAsync(workTime);
 
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.ErrorMessage);
+            }
+
+            return View(workTime);
+        }
         workTime.ActiveWorkHours = model.ActiveWorkHours;
         workTime.MaintenanceHours = model.MaintenanceHours;
         workTime.RecordedDate = DateTime.UtcNow;

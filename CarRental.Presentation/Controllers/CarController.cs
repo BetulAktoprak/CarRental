@@ -34,6 +34,8 @@ public class CarController : Controller
     [HttpPost]
     public async Task<IActionResult> AddCar(Car car)
     {
+        car.Plate = car.Plate.ToUpper();
+        car.Name = car.Name.ToUpper();
         var validator = new CarValidator();
         var validationResult = await validator.ValidateAsync(car);
 
@@ -82,10 +84,8 @@ public class CarController : Controller
 
     public async Task<IActionResult> ListAllUserCars()
     {
-        // Tüm kullanıcıları al
         var users = await _userService.GetAllAsync();
 
-        // Kullanıcılara ait araçları al
         var userCars = new List<UserViewModel>();
 
         foreach (var user in users)
@@ -94,7 +94,6 @@ public class CarController : Controller
 
             var userCarViewModel = new UserViewModel
             {
-                //Id = user.Id,
                 FullName = user.FullName,
                 Cars = cars.Select(car => new CarViewModel
                 {
@@ -110,13 +109,12 @@ public class CarController : Controller
         return View(userCars);
     }
 
-
-
     [HttpGet]
     public async Task<IActionResult> EditCar(Guid id)
     {
         var car = await _carService.GetByIdAsync(id);
         if (car == null) return NotFound();
+
         var users = await _userService.GetAllAsync();
 
         ViewBag.Users = new SelectList(users, "Id", "FullName");
@@ -127,6 +125,9 @@ public class CarController : Controller
     [HttpPost]
     public async Task<IActionResult> EditCar(Car car)
     {
+        car.Plate = car.Plate.ToUpper();
+        car.Name = car.Name.ToUpper();
+
         var validator = new CarValidator();
         var validationResult = await validator.ValidateAsync(car);
 

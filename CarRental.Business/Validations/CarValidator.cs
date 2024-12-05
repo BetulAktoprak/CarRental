@@ -18,7 +18,5 @@ public class CarValidator : AbstractValidator<Car>
         RuleFor(car => car.Price)
             .GreaterThan(-1).WithMessage("Fiyat negatif olamaz.");
 
-        //RuleFor(car => car.UserId)
-        //    .NotEqual(Guid.Empty).WithMessage("Geçerli bir kullanıcı giriniz.");
     }
 }
