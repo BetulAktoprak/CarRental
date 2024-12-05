@@ -1,0 +1,39 @@
+﻿@model List<CarRental.Presentation.Models.UserViewModel>
+@{
+    ViewData["Title"] = "ListAllUserCars";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+<h2>Tüm Kullanıcılara Atanan Araçlar</h2>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Kullanıcı Adı</th>
+                <th>Araç Adı</th>
+                <th>Plaka</th>
+                <th>Atama Tarihi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var userCar in Model)
+            {
+                @foreach (var car in userCar.Cars)
+                {
+                    <tr>
+                        <td>@userCar.FullName</td>
+                        <td>@car.Name</td>
+                        <td>@car.Plate</td>
+                        <td>@car.CreatedDate.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Hiçbir kullanıcıya araç atanmış değil.</p>
+}

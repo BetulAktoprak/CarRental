@@ -1,6 +1,7 @@
 ﻿using CarRental.Business.Validations;
 using CarRental.Core.Entities;
 using CarRental.Core.Services;
+using CarRental.Presentation.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -27,8 +28,6 @@ public class CarController : Controller
     {
         var users = await _userService.GetAllAsync();
 
-        ViewBag.Users = new SelectList(users, "Id", "FullName");
-
         return View(new Car());
     }
 
@@ -45,16 +44,73 @@ public class CarController : Controller
                 ModelState.AddModelError(string.Empty, error.ErrorMessage);
             }
 
-            var users = await _userService.GetAllAsync();
-            ViewBag.Users = new SelectList(users, "Id", "FullName");
-
             return View(car);
         }
-
+        car.UserId = null;
         await _carService.AddAsync(car);
 
         return RedirectToAction("ListCar");
     }
+
+    [HttpGet]
+    public async Task<IActionResult> AssignUserToCar()
+    {
+        var users = await _userService.GetAllAsync();
+        var cars = await _carService.GetAllAsync();
+
+        ViewBag.Users = new SelectList(users, "Id", "FullName");
+        ViewBag.Cars = new SelectList(cars, "Id", "Plate");
+
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AssignUserToCar(Guid carId, Guid userId)
+    {
+        var car = await _carService.GetByIdAsync(carId);
+        if (car == null)
+        {
+            ModelState.AddModelError(string.Empty, "Araç ve Kullanıcı seçimi zorunludur.");
+            return View();
+        }
+
+        car.UserId = userId;
+        await _carService.Update(car);
+
+        return RedirectToAction("ListCar");
+    }
+
+    public async Task<IActionResult> ListAllUserCars()
+    {
+        // Tüm kullanıcıları al
+        var users = await _userService.GetAllAsync();
+
+        // Kullanıcılara ait araçları al
+        var userCars = new List<UserViewModel>();
+
+        foreach (var user in users)
+        {
+            var cars = await _carService.GetUserCarsAsync(user.Id);
+
+            var userCarViewModel = new UserViewModel
+            {
+                //Id = user.Id,
+                FullName = user.FullName,
+                Cars = cars.Select(car => new CarViewModel
+                {
+                    Plate = car.Plate,
+                    Name = car.Name,
+                    CreatedDate = car.CreatedDate
+                }).ToList()
+            };
+
+            userCars.Add(userCarViewModel);
+        }
+
+        return View(userCars);
+    }
+
+
 
     [HttpGet]
     public async Task<IActionResult> EditCar(Guid id)
