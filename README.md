@@ -99,7 +99,7 @@
 
 - **Controllers**:
   - **CarController**:  
-    Admin kullanıcısının araç adları ve plakaları üzerine işlemler yaptığı action metotlar yer alır.  
+    Admin kullanıcısının araç adları ve plakaları üzerine işlemler yaptığı action metotları yer alır.  
     (Listeleme, Ekleme, Düzenleme, Silme)
 
   - **HomeController**:  
