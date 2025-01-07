@@ -2,6 +2,8 @@
 
 *Bu proje, araç kiralama firması için araçların aktif çalışma sürelerini, bakım sürelerini ve boşta bekleme sürelerini hesaplayarak görsel ve tablolu raporlar sunmak amacıyla geliştirilmiştir. Proje, modern yazılım geliştirme prensiplerine uygun olarak tasarlanmış olup ASP.NET Core MVC platformunda inşa edilmiştir.*
 
+![Proje Tanıtımı](./AracIslemleri.gif)
+
 ## Projede Kullanılan Teknolojiler
 
 - Programlama Dili: C#
